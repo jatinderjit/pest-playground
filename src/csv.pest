@@ -1,0 +1,6 @@
+integer = { !("0"{2,}) ~ ASCII_DIGIT+ }
+fractional = { "." ~ ASCII_DIGIT+ }
+non_neg = { (integer ~ fractional) | integer | fractional }
+number = { "-"? ~ non_neg }
+record = { number ~ ("," ~ number)* }
+file = { SOI ~ (record ~ (("\r\n" | "\n") ~ record)*)? ~ EOI }
