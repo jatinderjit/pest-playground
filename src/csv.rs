@@ -93,7 +93,8 @@ mod test {
     #[test]
     fn test_parse() {
         let unparsed = r"0,1
--2,-3.4";
+-2,-3.4
+";
         let parsed = parse(unparsed);
         let data = parsed.unwrap();
         assert_eq!(data, vec![vec![0., 1.], vec![-2., -3.4]]);
