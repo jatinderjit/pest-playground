@@ -63,8 +63,8 @@ mod test {
     #[test]
     fn test_parse() {
         let file = "
-username=abc
-password=pass
+username = abc
+password = pass
 
 [server_1]
 interface=eth0

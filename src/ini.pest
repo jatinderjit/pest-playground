@@ -30,10 +30,10 @@
 char = { ASCII_ALPHANUMERIC | "." | "_" | "/" }
 
 /// Cannot be empty
-name = { char+ }
+name = @{ char+ }
 
 /// Can be empty
-value =  { char* }
+value =  @{ char* }
 
 /// Starts a new section
 section = { "[" ~ name ~ "]" }
@@ -46,3 +46,5 @@ file = {
     ((section | property)? ~ NEWLINE)* ~
     EOI
 }
+
+WHITESPACE = _{" "}
