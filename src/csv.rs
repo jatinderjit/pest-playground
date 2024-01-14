@@ -8,23 +8,26 @@ use pest_derive::Parser;
 struct CSVParser;
 
 pub fn parse(data: &str) -> Result<Vec<Vec<f64>>, Box<dyn Error>> {
-    let file = CSVParser::parse(Rule::file, &data)?.next().unwrap(); // `unwrap` should never fail
+    let file = CSVParser::parse(Rule::file, &data)?
+        // extracts the "file" rule
+        .next()
+        // `unwrap` should never fail
+        .unwrap();
 
-    let mut rows = Vec::new();
-    for record in file.into_inner() {
-        match record.as_rule() {
+    let rows = file
+        .into_inner()
+        .filter_map(|record| match record.as_rule() {
             Rule::record => {
-                let mut row = Vec::new();
-                for number in record.into_inner() {
-                    let number = number.as_str().parse::<f64>().unwrap();
-                    row.push(number);
-                }
-                rows.push(row);
+                let row = record
+                    .into_inner()
+                    .map(|number| number.as_str().parse::<f64>().unwrap())
+                    .collect::<Vec<_>>();
+                Some(row)
             }
-            Rule::EOI => {}
+            Rule::EOI => None,
             _ => unreachable!(),
-        }
-    }
+        })
+        .collect::<Vec<_>>();
 
     Ok(rows)
 }
