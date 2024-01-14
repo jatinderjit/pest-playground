@@ -1,0 +1,48 @@
+//! A parser for INI (initialization) format
+//!
+//! Each line contains a **key and value** separated by an equals sign;
+//! or contains a **section name** surrounded by square brackets;
+//! or else is **blank** and has no meaning.
+//!
+//! Whenever a section name appears, the following keys and values belong to that
+//! section, until the next section name. The key–value pairs at the beginning of the
+//! file belong to an implicit "empty" section.
+//!
+//! # Example
+//!
+//! ```ini
+//! username = abc
+//! password = plain_text
+//!
+//! [server_1]
+//! interface=eth0
+//! ip=127.0.0.1
+//! document_root=/var/www/example.org
+//!
+//! [empty_section]
+//!
+//! [second_server]
+//! document_root=/var/www/example.com
+//! ip=
+//! interface=eth1
+//! ```
+
+char = { ASCII_ALPHANUMERIC | "." | "_" | "/" }
+
+/// Cannot be empty
+name = { char+ }
+
+/// Can be empty
+value =  { char* }
+
+/// Starts a new section
+section = { "[" ~ name ~ "]" }
+
+/// Key-value pair
+property = { name ~ "=" ~ value}
+
+file = {
+    SOI ~
+    ((section | property)? ~ NEWLINE)* ~
+    EOI
+}
